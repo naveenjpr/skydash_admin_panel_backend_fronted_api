@@ -12,8 +12,11 @@ server.get("/", (request, response) => {
   response.send("Server Working Fine.....")
 })
 
+// backend url
 require("./src/routes/backend/categories.routes")(server)
 require("./src/routes/backend/courses.routes")(server)
+// fronted url
+require("./src/routes/frontend/courses.routes")(server)
 
 server.get("*", (request, response) => {
   response.send("Page not found.....")
