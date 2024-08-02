@@ -8,13 +8,48 @@ import prev from "../img/generic-image-file-icon-hi.png"
 import axios from "axios"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { useNavigate } from "react-router"
+import { useNavigate, useParams } from "react-router"
 // import AdminForms from '../Common/AdminForms'
 
 function Addcourse() {
   let { changemenu } = useContext(mainContext)
   let [formSubmit, setFormSubmit] = useState(false)
   let navigation = useNavigate()
+  let params = useParams()
+  let [input, setInput] = useState({
+    course_name: "",
+    course_image: "",
+    course_price: "",
+    course_duration: "",
+    course_description: "",
+    course_status: "",
+    course_order: "",
+  })
+
+  useEffect(() => {
+    if (params.course_id != undefined) {
+      axios
+        .post(
+          "http://localhost:5000/api/backend/courses/details/" +
+            params.course_id
+        )
+        .then((result) => {
+          console.log(result.data.data)
+          setInput({
+            course_name: result.data.data.name,
+            course_image: result.data.data.image,
+            course_price: result.data.data.price,
+            course_duration: result.data.data.duration,
+            course_description: result.data.data.description,
+            course_status: result.data.data.status,
+            course_order: result.data.data.order,
+          })
+        })
+        .catch((error) => {
+          toast.error("something want wrong")
+        })
+    }
+  }, [])
 
   let submitHandler = (event) => {
     event.preventDefault()
@@ -42,27 +77,51 @@ function Addcourse() {
       status: status,
     }
 
-    axios
-      .post("http://localhost:5000/api/backend/courses/add", dataSave)
-      .then((result) => {
-        if (result.data.status == true) {
-          toast.success(result.data.message)
-          setFormSubmit(true)
-        } else {
-          toast.error(result.data.message)
-        }
-        console.log(result.data)
-      })
-      .catch((error) => {
-        toast.error("something went wrong")
-        console.log("something went wrong")
-      })
+    if (params.course_id == undefined) {
+      axios
+        .post("http://localhost:5000/api/backend/courses/add", dataSave)
+        .then((result) => {
+          if (result.data.status == true) {
+            toast.success(result.data.message)
+            setFormSubmit(true)
+          } else {
+            toast.error(result.data.message)
+          }
+          console.log(result.data)
+        })
+        .catch((error) => {
+          toast.error("something went wrong")
+          console.log("something went wrong")
+        })
+    } else {
+      dataSave.id = params.course_id
+      axios
+        .put("http://localhost:5000/api/backend/courses/update", dataSave)
+        .then((result) => {
+          if (result.data.status == true) {
+            toast.success(result.data.message)
+            setFormSubmit(true)
+          } else {
+            toast.error(result.data.message)
+          }
+          console.log(result.data)
+        })
+        .catch((error) => {
+          toast.error("something went wrong")
+          console.log("something went wrong")
+        })
+    }
   }
   useEffect(() => {
     if (formSubmit == true) {
       navigation("/viewcourse")
     }
   }, [formSubmit])
+  let inputHander = (event) => {
+    let data = { ...input }
+    data[event.target.name] = event.target.value
+    setInput(data)
+  }
 
   return (
     <div>
@@ -85,18 +144,24 @@ function Addcourse() {
                   type="text"
                   name="course_name"
                   className="border px-4 border-gray-400 w-full h-[50px] mb-3 mt-2 "
+                  value={input.course_name}
+                  onChange={inputHander}
                 />
                 Courses Price
                 <input
                   type="text"
                   name="course_price"
                   className="border px-4 border-gray-400 w-full h-[50px] mb-3 mt-2 "
+                  value={input.course_price}
+                  onChange={inputHander}
                 />
                 Courses Duration
                 <input
                   type="text"
                   name="course_duration"
                   className="border px-4 border-gray-400 w-full h-[50px] mb-3 mt-2 "
+                  value={input.course_duration}
+                  onChange={inputHander}
                 />
                 Courses Description
                 <textarea
@@ -105,12 +170,16 @@ function Addcourse() {
                   className="border px-4 pt-3 border-gray-400 my-2 w-full h-[100px]"
                   cols="30"
                   rows="10"
+                  value={input.course_description}
+                  onChange={inputHander}
                 ></textarea>
                 Courses Order
                 <input
                   type="number"
                   name="course_order"
                   className="border px-4 border-gray-400 w-full h-[50px] mb-3 mt-2"
+                  value={input.course_order}
+                  onChange={inputHander}
                 />
                 <input
                   type="file"
@@ -144,6 +213,8 @@ function Addcourse() {
                     name="course_status"
                     value="1"
                     className="mx-2 w-[20px] h-[20px] text-[20px]"
+                    onChange={inputHander}
+                    checked={input.course_status == 1 ? "checked" : ""}
                   />{" "}
                   Active
                   <input
@@ -151,12 +222,15 @@ function Addcourse() {
                     name="course_status"
                     value="0"
                     className="mx-2 w-[20px] h-[20px] text-[20px]"
+                    onChange={inputHander}
+                    checked={input.course_status == 0 ? "checked" : ""}
                   />{" "}
                   Deactive
                 </div>
                 <input
                   type="submit"
                   className="bg-[#4B49AC] mb-8 mt-7 text-[18px] px-8 py-2 rounded-[10px] text-white"
+                  value={params.course_id == undefined ? "Submit" : "Update"}
                 />
                 <input
                   type="reset"

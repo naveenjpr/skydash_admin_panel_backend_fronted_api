@@ -1,9 +1,11 @@
 const coursesModel = require("../../models/courses")
 
 exports.create = async (request, response) => {
+  console.log(request.body)
+  console.log(request.file)
   data = new coursesModel({
     name: request.body.name,
-    image: request.body.image,
+    image: request.body.filename,
     price: request.body.price,
     duration: request.body.duration,
     description: request.body.description,
@@ -250,6 +252,38 @@ exports.delete = async (request, response) => {
     .updateOne(
       {
         _id: request.body.id,
+      },
+      {
+        $set: {
+          deleted_at: Date.now(),
+        },
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record delete succussfully",
+      }
+
+      response.send(res)
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong",
+      }
+
+      response.send(res)
+    })
+}
+
+exports.multipledelete = async (request, response) => {
+  console.log(request.body.ids)
+
+  await coursesModel
+    .updateMany(
+      {
+        _id: { $in: request.body.ids },
       },
       {
         $set: {
