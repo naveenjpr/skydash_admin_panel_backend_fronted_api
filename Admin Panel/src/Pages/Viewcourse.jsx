@@ -14,6 +14,7 @@ function Viewcourse() {
   let [courses, setCourses] = useState([])
   let [changeStatusValue, setChangeStatus] = useState(false)
   let [courseIds, setCourseIds] = useState([])
+  let [imagePath, setImagePath] = useState()
 
   let changeStatus = (id, status) => {
     const data = {
@@ -97,6 +98,8 @@ function Viewcourse() {
       .post("http://localhost:5000/api/backend/courses/view")
       .then((result) => {
         if (result.data.status == true) {
+          setImagePath(result.data.imagePath)
+
           setCourses(result.data.data)
         } else {
           setCourses([])
@@ -152,7 +155,15 @@ function Viewcourse() {
                         <td>{v.name}</td>
                         <td>{v.price}</td>
                         <td>{v.duration}</td>
-                        <td>{v.duration}</td>
+                        
+                        <td>
+                          {" "}
+                          <img
+                            src={imagePath + v.image}
+                            width={150}
+                            height={150}
+                          />
+                        </td>
                         <td>
                           {v.status == 1 ? (
                             <button

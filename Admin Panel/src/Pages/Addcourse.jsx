@@ -5,7 +5,7 @@ import DashboardItems from "../Common/DashboardItems"
 import Footer from "../Common/Footer"
 import { mainContext } from "../Context"
 import prev from "../img/generic-image-file-icon-hi.png"
-import axios from "axios"
+import axios, { toFormData } from "axios"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useNavigate, useParams } from "react-router"
@@ -67,19 +67,29 @@ function Addcourse() {
     }
     // console.log('order - '+event.target.course_order.value);
 
+    let form = new FormData(event.target)
+
+    // console.log(form);
+
     let dataSave = {
-      name: event.target.course_name.value,
-      price: event.target.course_price.value,
-      image: event.target.course_name.value,
-      duration: event.target.course_duration.value,
-      description: event.target.course_description.value,
+      name: form.get("course_name"),
+      price: form.get("course_price"),
+      duration: form.get("course_duration"),
+      description: form.get("course_description"),
       order: order,
       status: status,
     }
 
+    if (form.get("course_image") != "") {
+      dataSave.image = form.get("course_image")
+    }
+
     if (params.course_id == undefined) {
       axios
-        .post("http://localhost:5000/api/backend/courses/add", dataSave)
+        .post(
+          "http://localhost:5000/api/backend/courses/add",
+          toFormData(dataSave)
+        )
         .then((result) => {
           if (result.data.status == true) {
             toast.success(result.data.message)
@@ -91,12 +101,15 @@ function Addcourse() {
         })
         .catch((error) => {
           toast.error("something went wrong")
-          console.log("something went wrong")
+          console.log(error)
         })
     } else {
       dataSave.id = params.course_id
       axios
-        .put("http://localhost:5000/api/backend/courses/update", dataSave)
+        .put(
+          "http://localhost:5000/api/backend/courses/update",
+          toFormData(dataSave)
+        )
         .then((result) => {
           if (result.data.status == true) {
             toast.success(result.data.message)
@@ -178,11 +191,12 @@ function Addcourse() {
                   type="number"
                   name="course_order"
                   className="border px-4 border-gray-400 w-full h-[50px] mb-3 mt-2"
-                  value={input.course_order}
                   onChange={inputHander}
+                  value={input.course_order}
                 />
                 <input
                   type="file"
+                  name="course_image"
                   id="file-input"
                   className="border hidden border-gray-400 w-full h-[50px] mb-3 mt-2 "
                 />

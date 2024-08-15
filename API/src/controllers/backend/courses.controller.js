@@ -2,16 +2,20 @@ const coursesModel = require("../../models/courses")
 
 exports.create = async (request, response) => {
   console.log(request.body)
-  console.log(request.file)
   data = new coursesModel({
     name: request.body.name,
-    image: request.body.filename,
     price: request.body.price,
     duration: request.body.duration,
     description: request.body.description,
     status: request.body.status ?? 1,
     order: request.body.order ?? 1,
   })
+
+  if (request.file != undefined) {
+    if (request.file.filename != "") {
+      data.image = request.file.filename
+    }
+  }
 
   await data
     .save()
@@ -81,6 +85,7 @@ exports.view = async (request, response) => {
         var res = {
           status: true,
           message: "Record found successfully !!",
+          imagePath: "http://localhost:5000/uploads/courses/",
           data: result,
         }
 
@@ -143,14 +148,17 @@ exports.details = async (request, response) => {
 exports.update = async (request, response) => {
   data = {
     name: request.body.name,
-    image: request.body.image,
     price: request.body.price,
     duration: request.body.duration,
     description: request.body.description,
     status: request.body.status ?? 1,
     order: request.body.order ?? 1,
   }
-
+  if (request.file != undefined) {
+    if (request.file.filename != "") {
+      data.image = request.file.filename
+    }
+  }
   await coursesModel
     .updateOne(
       {

@@ -29,7 +29,7 @@ module.exports = (app) => {
 
   route.post("/details/:id", upload.none(), coursesController.details)
 
-  route.put("/update", upload.none(), coursesController.update)
+  route.put("/update", uploadImage, coursesController.update)
 
   route.put("/change-status", upload.none(), coursesController.changeStatus)
 

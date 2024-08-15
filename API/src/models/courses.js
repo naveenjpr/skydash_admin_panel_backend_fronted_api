@@ -4,11 +4,11 @@ const courseSchema = new mongoose.Schema({
     name : {
         type : String,
         required : [true, 'Course Name is required'],
-        match : /^[a-zA-Z ]{2,20}$/
+        match : /^[a-zA-Z ]{2,90}$/
     },
     image : {
         type : String,
-        required : [true, 'Course Image is required'],
+        // required : [true, 'Course Image is required'],
     },
     price : {
         type : Number,
