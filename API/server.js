@@ -20,6 +20,7 @@ require("./src/routes/backend/videos.routes")(server)
 
 // fronted url
 require("./src/routes/frontend/courses.routes")(server)
+require("./src/routes/frontend/videos.routes")(server)
 require("./src/routes/frontend/user.routes")(server)
 
 server.get("*", (request, response) => {

@@ -145,7 +145,7 @@ exports.update = async (request, response) => {
     status: request.body.status ?? 1,
     order: request.body.order ?? 1,
   }
-  
+
   await videosModel
     .updateOne(
       {
@@ -181,5 +181,122 @@ exports.update = async (request, response) => {
       response.send(res)
     })
 }
-// exports.changeStatus = async (request, response) => {}
-// exports.delete = async (request, response) => {}
+exports.changeStatus = async (request, response) => {
+  const videoData = await videosModel.findOne({
+    _id: request.body.id,
+  })
+
+  // console.log(courseData.length);
+
+  if (videoData == null) {
+    var res = {
+      status: false,
+      message: "Id not match in the database",
+    }
+
+    response.send(res)
+  }
+
+  await videosModel
+    .updateOne(
+      {
+        _id: request.body.id,
+      },
+      {
+        $set: {
+          status: request.body.status,
+        },
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record update succussfully",
+        data: result,
+      }
+
+      response.send(res)
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong",
+      }
+
+      response.send(res)
+    })
+}
+exports.delete = async (request, response) => {
+  const videoData = await videosModel.findOne({
+    _id: request.body.id,
+    deleted_at: null,
+  })
+
+  if (videoData == null) {
+    var res = {
+      status: false,
+      message: "Id not match in the database",
+    }
+
+    response.send(res)
+  }
+
+  await videosModel
+    .updateOne(
+      {
+        _id: request.body.id,
+      },
+      {
+        $set: {
+          deleted_at: Date.now(),
+        },
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record delete succussfully",
+      }
+
+      response.send(res)
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong",
+      }
+
+      response.send(res)
+    })
+}
+exports.multipledelete = async (request, response) => {
+  console.log(request.body.ids)
+
+  await videosModel
+    .updateMany(
+      {
+        _id: { $in: request.body.ids },
+      },
+      {
+        $set: {
+          deleted_at: Date.now(),
+        },
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record delete succussfully",
+      }
+
+      response.send(res)
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong",
+      }
+
+      response.send(res)
+    })
+}
