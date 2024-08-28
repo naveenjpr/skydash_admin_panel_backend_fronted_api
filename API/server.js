@@ -8,6 +8,8 @@ server.use(cors())
 server.use(express.json())
 server.use(express.urlencoded({ extended: true }))
 server.use("/uploads/courses", express.static("uploads/courses"))
+server.use("/uploads/videos", express.static("uploads/videos"))
+server.use("/uploads/sliders", express.static("uploads/sliders"))
 
 server.get("/", (request, response) => {
   response.send("Server Working Fine.....")
@@ -17,10 +19,12 @@ server.get("/", (request, response) => {
 require("./src/routes/backend/categories.routes")(server)
 require("./src/routes/backend/courses.routes")(server)
 require("./src/routes/backend/videos.routes")(server)
+require("./src/routes/backend/sliders.routes")(server)
 
 // fronted url
 require("./src/routes/frontend/courses.routes")(server)
 require("./src/routes/frontend/videos.routes")(server)
+require("./src/routes/frontend/sliders.routes")(server)
 require("./src/routes/frontend/user.routes")(server)
 
 server.get("*", (request, response) => {

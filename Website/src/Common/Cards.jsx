@@ -12,7 +12,7 @@ function Cards() {
     axios
       .post("http://localhost:5000/api/fronted/courses/view")
       .then((result) => {
-        console.log(result.data.data)
+        // console.log(result.data.data)
         setcardData(result.data.data)
       })
       .catch((error) => {

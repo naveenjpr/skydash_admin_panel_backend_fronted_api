@@ -2,6 +2,8 @@ const { request } = require("express")
 const videosModel = require("../../models/video")
 
 exports.create = async (request, response) => {
+  console.log(request.body)
+
   data = new videosModel({
     name: request.body.name,
     topic: request.body.topic,

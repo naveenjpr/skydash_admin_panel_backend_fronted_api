@@ -36,7 +36,7 @@ const router = createBrowserRouter([
     element:<Addslider/>
   },
   {
-    path:"addvideo",
+    path:"addvideo/:video_id?",
     element:<Addvideo/>
   },
   {

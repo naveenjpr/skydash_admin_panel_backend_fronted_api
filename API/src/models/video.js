@@ -6,6 +6,11 @@ const videoSchema = new mongoose.Schema({
     required: [true, "video Course name is required"],
     match: /^[a-zA-Z ]{2,90}$/,
   },
+  image: {
+    type: String,
+    // required: [true, "video image name is required"],
+    match: /^[a-zA-Z ]{2,90}$/,
+  },
 
   topic: {
     type: String,
