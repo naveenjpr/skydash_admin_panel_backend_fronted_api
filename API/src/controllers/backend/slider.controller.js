@@ -84,7 +84,7 @@ exports.view = async (request, response) => {
         var res = {
           status: true,
           message: "Record found successfully !!",
-          imagePath: "http://localhost:5000/uploads/slides/",
+          imagePath: "http://localhost:5000/uploads/sliders/",
           data: result,
         }
 

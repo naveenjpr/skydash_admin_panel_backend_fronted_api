@@ -1,20 +1,99 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { mainContext } from "../Context"
 import Header from "../Common/Header"
 import Sidebar from "../Common/Sidebar"
 import Footer from "../Common/Footer"
 import prev from "../img/generic-image-file-icon-hi.png"
+import { useNavigate, useParams } from "react-router"
+import { ToastContainer, toast } from "react-toastify"
+import axios from "axios"
 
 function Addslider() {
   let { changemenu } = useContext(mainContext)
-  
-  
 
+  let [formSubmit, setFormSubmit] = useState(false)
+  let navigation = useNavigate()
+  let params = useParams()
+  let [input, setInput] = useState({
+    Slider_Heading: "",
+    Sub_Heading: "",
+    Slider_Image: "",
 
+    // course_description: "",
+    slider_status: "",
+    // course_order: "",
+  })
+  let inputHander = (event) => {
+    let data = { ...input }
+    data[event.target.name] = event.target.value
+    setInput(data)
+  }
+  let sliderHandler = (event) => {
+    event.preventDefault()
+
+    if (event.target.slider_status.value == "") {
+      var status = 1
+    } else {
+      var status = event.target.slider_status.value
+    }
+
+    let dataSave = {
+      Slider_Heading: event.target.Slider_Heading.value,
+      Sub_Heading: event.target.Sub_Heading.value,
+      status: status,
+    }
+
+    if (params.slider_id == undefined) {
+      axios
+        .post("http://localhost:5000/api/backend/sliders/add", dataSave)
+        .then((result) => {
+          if (result.data.status == true) {
+            toast.success(result.data.message)
+            setFormSubmit(true)
+          } else {
+            toast.error(result.data.message)
+          }
+          console.log(result.data)
+        })
+        .catch((error) => {
+          toast.error("something went wrong")
+          console.log(error)
+        })
+    }
+
+    // else {
+    //   dataSave.id = params.course_id
+    //   axios
+    //     .put(
+    //       "http://localhost:5000/api/backend/courses/update",
+    //       toFormData(dataSave)
+    //     )
+    //     .then((result) => {
+    //       if (result.data.status == true) {
+    //         toast.success(result.data.message)
+    //         setFormSubmit(true)
+    //       } else {
+    //         toast.error(result.data.message)
+    //       }
+    //       console.log(result.data)
+    //     })
+    //     .catch((error) => {
+    //       toast.error("something went wrong")
+    //       console.log("something went wrong")
+    //     })
+    // }
+  }
+
+  useEffect(() => {
+    if (formSubmit == true) {
+      navigation("/viewslider")
+    }
+  }, [formSubmit])
 
   return (
     <div>
       <Header />
+      <ToastContainer />
 
       <div className="flex  bg-[#F5F7FF]">
         <Sidebar />
@@ -27,19 +106,28 @@ function Addslider() {
           <h1 className="text-[25px] font-[500] mb-[10px]">Slider</h1>
           <div className="">
             <div className="bg-white w-[100%] mb-[50px] p-4 h-full rounded-[20px]">
-              <form action="">
+              <form onSubmit={sliderHandler}>
                 Slider Heading
                 <input
+                  value={input.Slider_Heading}
+                  name=" Slider_Heading"
+                  onChange={inputHander}
                   type="text"
                   className="border border-gray-400 px-4 w-full h-[50px] mb-3 mt-2 "
                 />
                 Slider Sub-Heading
                 <input
+                  value={input.Sub_Heading}
+                  name=" Sub_Heading"
+                  onChange={inputHander}
                   type="text"
                   className="border border-gray-400 w-full h-[50px] mb-3 mt-2 px-4 "
                 />
-                Slider Image
+                Slider_Image
                 <input
+                  value={input.Slider_Image}
+                  name="Slider_Image"
+                  onChange={inputHander}
                   type="file"
                   id="file-input"
                   className="border hidden border-gray-400 w-full h-[50px] mb-3 mt-2 "
@@ -77,16 +165,21 @@ function Addslider() {
                   <input
                     type="radio"
                     className="mx-2 w-[20px] h-[20px] text-[20px]"
+                    onChange={inputHander}
+                    checked={input.slider_status == 1 ? "checked" : ""}
                   />{" "}
                   Active
                   <input
                     type="radio"
                     className="mx-2 w-[20px] h-[20px] text-[20px]"
+                    onChange={inputHander}
+                    checked={input.slider_status == 0 ? "checked" : ""}
                   />{" "}
                   Deactive
                 </div>
                 <input
                   type="submit"
+                  value={params.slider_id == undefined ? "Submit" : "Update"}
                   className="bg-[#4B49AC] mb-8 mt-7 text-[18px] px-8 py-2 rounded-[10px] text-white"
                 />
                 <input

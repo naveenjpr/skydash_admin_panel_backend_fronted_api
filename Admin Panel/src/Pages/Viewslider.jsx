@@ -17,7 +17,6 @@ function Viewslider() {
         if (result.data.status == true) {
           setImagePath(result.data.imagePath)
 
-          console.log(result.data.data)
           setAPislider(result.data.data)
         } else {
           setAPislider([])
@@ -52,6 +51,7 @@ function Viewslider() {
                 </tr>
                 {APislider.length >= 1
                   ? APislider.map((v, i) => {
+                      console.log(v)
                       return (
                         <tr key={i}>
                           <td>{i + 1}</td>
@@ -60,7 +60,7 @@ function Viewslider() {
                           {/* <td>This is new React Course</td> */}
                           <td>
                             <img
-                              src={imagePath + v.image}
+                              src={imagePath+v.image}
                               width={150}
                               height={150}
                             />
