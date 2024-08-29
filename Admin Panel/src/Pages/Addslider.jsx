@@ -6,7 +6,7 @@ import Footer from "../Common/Footer"
 import prev from "../img/generic-image-file-icon-hi.png"
 import { useNavigate, useParams } from "react-router"
 import { ToastContainer, toast } from "react-toastify"
-import axios from "axios"
+import axios, { toFormData } from "axios"
 
 function Addslider() {
   let { changemenu } = useContext(mainContext)
@@ -14,20 +14,13 @@ function Addslider() {
   let [formSubmit, setFormSubmit] = useState(false)
   let navigation = useNavigate()
   let params = useParams()
-  let [input, setInput] = useState({
+  let [inputslider, setInputslider] = useState({
     Slider_Heading: "",
-    Sub_Heading: "",
+    Slider_SubHeading: "",
     Slider_Image: "",
-
-    // course_description: "",
     slider_status: "",
-    // course_order: "",
   })
-  let inputHander = (event) => {
-    let data = { ...input }
-    data[event.target.name] = event.target.value
-    setInput(data)
-  }
+  console.log(inputslider)
   let sliderHandler = (event) => {
     event.preventDefault()
 
@@ -36,16 +29,23 @@ function Addslider() {
     } else {
       var status = event.target.slider_status.value
     }
+    let form = new FormData(event.target)
 
     let dataSave = {
-      Slider_Heading: event.target.Slider_Heading.value,
-      Sub_Heading: event.target.Sub_Heading.value,
+      Slider_Heading: form.get("Slider_Heading"),
+      Slider_SubHeading: form.get("Slider_SubHeading"),
       status: status,
     }
 
+    if (form.get("slider_image") != "") {
+      dataSave.image = form.get("slider_image")
+    }
     if (params.slider_id == undefined) {
       axios
-        .post("http://localhost:5000/api/backend/sliders/add", dataSave)
+        .post(
+          "http://localhost:5000/api/backend/sliders/add",
+          toFormData(dataSave)
+        )
         .then((result) => {
           if (result.data.status == true) {
             toast.success(result.data.message)
@@ -59,29 +59,27 @@ function Addslider() {
           toast.error("something went wrong")
           console.log(error)
         })
+    } else {
+      dataSave.id = params.course_id
+      axios
+        .put(
+          "http://localhost:5000/api/backend/courses/update",
+          toFormData(dataSave)
+        )
+        .then((result) => {
+          if (result.data.status == true) {
+            toast.success(result.data.message)
+            setFormSubmit(true)
+          } else {
+            toast.error(result.data.message)
+          }
+          console.log(result.data)
+        })
+        .catch((error) => {
+          toast.error("something went wrong")
+          console.log("something went wrong")
+        })
     }
-
-    // else {
-    //   dataSave.id = params.course_id
-    //   axios
-    //     .put(
-    //       "http://localhost:5000/api/backend/courses/update",
-    //       toFormData(dataSave)
-    //     )
-    //     .then((result) => {
-    //       if (result.data.status == true) {
-    //         toast.success(result.data.message)
-    //         setFormSubmit(true)
-    //       } else {
-    //         toast.error(result.data.message)
-    //       }
-    //       console.log(result.data)
-    //     })
-    //     .catch((error) => {
-    //       toast.error("something went wrong")
-    //       console.log("something went wrong")
-    //     })
-    // }
   }
 
   useEffect(() => {
@@ -90,6 +88,11 @@ function Addslider() {
     }
   }, [formSubmit])
 
+  let inputHander = (event) => {
+    let data = { ...inputslider }
+    data[event.target.name] = event.target.value
+    setInputslider(data)
+  }
   return (
     <div>
       <Header />
@@ -109,30 +112,28 @@ function Addslider() {
               <form onSubmit={sliderHandler}>
                 Slider Heading
                 <input
-                  value={input.Slider_Heading}
-                  name=" Slider_Heading"
+                  name="Slider_Heading"
                   onChange={inputHander}
+                  value={inputslider.Slider_Heading}
                   type="text"
                   className="border border-gray-400 px-4 w-full h-[50px] mb-3 mt-2 "
                 />
                 Slider Sub-Heading
                 <input
-                  value={input.Sub_Heading}
-                  name=" Sub_Heading"
+                  value={inputslider.Slider_SubHeading}
+                  name="Slider_SubHeading"
                   onChange={inputHander}
                   type="text"
                   className="border border-gray-400 w-full h-[50px] mb-3 mt-2 px-4 "
                 />
                 Slider_Image
                 <input
-                  value={input.Slider_Image}
                   name="Slider_Image"
-                  onChange={inputHander}
                   type="file"
                   id="file-input"
-                  className="border hidden border-gray-400 w-full h-[50px] mb-3 mt-2 "
+                  className="border hidden border-gray-400 w-full h-[50px] mb-1 mt-2 "
                 />
-                <div className="flex items-center gap-0 mt-[80px]">
+                <div className="flex items-center gap-0 mt-[3px]">
                   <div className="w-full flex items-center">
                     <input
                       type="text"
@@ -149,31 +150,27 @@ function Addslider() {
                     </label>
                   </div>
                   <div className="">
-                    <img src={prev} alt="" width={150} />
+                    <img src={prev} alt="" className="w-[80px] h-[80px]" />
                   </div>
                 </div>
-                Slider Description
-                <textarea
-                  name=""
-                  id=""
-                  className="border px-4 pt-3 border-gray-400 my-2 w-full h-[100px]"
-                  cols="30"
-                  rows="10"
-                ></textarea>
                 Slider Stauts
                 <div className="flex items-center mt-5  mb-8 gap-2">
                   <input
                     type="radio"
+                    value="1"
+                    name="slider_status"
                     className="mx-2 w-[20px] h-[20px] text-[20px]"
                     onChange={inputHander}
-                    checked={input.slider_status == 1 ? "checked" : ""}
+                    checked={inputslider.slider_status == 1 ? "checked" : ""}
                   />{" "}
                   Active
                   <input
                     type="radio"
                     className="mx-2 w-[20px] h-[20px] text-[20px]"
                     onChange={inputHander}
-                    checked={input.slider_status == 0 ? "checked" : ""}
+                    name="slider_status"
+                    value="0"
+                    checked={inputslider.slider_status == 0 ? "checked" : ""}
                   />{" "}
                   Deactive
                 </div>

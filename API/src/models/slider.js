@@ -13,7 +13,7 @@ const sliderSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: [true, "Course Image is required"],
+    required: [true, "slider Image is required"],
   },
 
   status: {
