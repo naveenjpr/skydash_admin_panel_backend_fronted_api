@@ -4,11 +4,33 @@ import Header from "../Common/Header"
 import Sidebar from "../Common/Sidebar"
 import Footer from "../Common/Footer"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 function Viewslider() {
   let { changemenu } = useContext(mainContext)
   const [APislider, setAPislider] = useState(false)
+  let [changeStatusValue, setChangeStatus] = useState(false)
   let [imagePath, setImagePath] = useState()
+
+  let changeStatus = (id, status) => {
+    const data = {
+      id: id,
+      status: !status,
+    }
+    axios
+      .put("http://localhost:5000/api/backend/sliders/change-status", data)
+      .then((result) => {
+        if (result.data.status == true) {
+          toast.success(result.data.message)
+          setChangeStatus(!changeStatusValue)
+        } else {
+          toast.error(result.data.message)
+        }
+      })
+      .catch((error) => {
+        toast.error("Something went wrong")
+      })
+  }
 
   useEffect(() => {
     axios
@@ -23,7 +45,7 @@ function Viewslider() {
         }
       })
       .catch((error) => {})
-  }, [])
+  }, [changeStatusValue])
   return (
     <div>
       <Header />
@@ -60,7 +82,7 @@ function Viewslider() {
                           {/* <td>This is new React Course</td> */}
                           <td>
                             <img
-                              src={imagePath+v.image}
+                              src={imagePath + v.image}
                               width={150}
                               height={150}
                             />
@@ -70,14 +92,14 @@ function Viewslider() {
                             {v.status == 1 ? (
                               <button
                                 className="px-5 py-1 mr-5 text-white bg-green-500"
-                                // onClick={() => changeStatus(v._id, v.status)}
+                                onClick={() => changeStatus(v._id, v.status)}
                               >
                                 Active
                               </button>
                             ) : (
                               <button
                                 className="px-5 py-1 text-white bg-red-400"
-                                // onClick={() => changeStatus(v._id, v.status)}
+                                onClick={() => changeStatus(v._id, v.status)}
                               >
                                 Inactive
                               </button>

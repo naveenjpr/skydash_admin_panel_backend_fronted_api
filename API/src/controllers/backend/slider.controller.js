@@ -144,109 +144,108 @@ exports.view = async (request, response) => {
 //     })
 // }
 
-// exports.update = async (request, response) => {
-//   data = {
-//     name: request.body.name,
-//     price: request.body.price,
-//     duration: request.body.duration,
-//     description: request.body.description,
-//     status: request.body.status ?? 1,
-//     order: request.body.order ?? 1,
-//   }
-//   if (request.file != undefined) {
-//     if (request.file.filename != "") {
-//       data.image = request.file.filename
-//     }
-//   }
-//   await sliderModel
-//     .updateOne(
-//       {
-//         _id: request.body.id,
-//       },
-//       {
-//         $set: data,
-//       }
-//     )
-//     .then((result) => {
-//       var res = {
-//         status: true,
-//         message: "Record update succussfully",
-//         data: result,
-//       }
+exports.update = async (request, response) => {
+  data = {
+    Slider_Heading: request.body.Slider_Heading,
+    Slider_SubHeading: request.body.Slider_SubHeading,
+    // Slider_Image: request.body.Slider_Image,
+    status: request.body.status ?? 1,
+    order: request.body.order ?? 1,
+  }
+  if (request.file != undefined) {
+    if (request.file.filename != "") {
+      data.image = request.file.filename
+    }
+  }
+  await sliderModel
+    .updateOne(
+      {
+        _id: request.body.id,
+      },
+      {
+        $set: data,
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record update succussfully",
+        data: result,
+      }
 
-//       response.send(res)
-//     })
-//     .catch((error) => {
-//       var error_messages = []
+      response.send(res)
+    })
+    .catch((error) => {
+      var error_messages = []
 
-//       for (let field in error.errors) {
-//         // console.log(field);
-//         error_messages.push(error.errors[field].message)
-//       }
+      for (let field in error.errors) {
+        // console.log(field);
+        error_messages.push(error.errors[field].message)
+      }
 
-//       var res = {
-//         status: false,
-//         message: "Something went wrong",
-//         error_messages: error_messages,
-//       }
+      var res = {
+        status: false,
+        message: "Something went wrong",
+        error_messages: error_messages,
+      }
 
-//       response.send(res)
-//     })
-// }
+      response.send(res)
+    })
+}
 
-// exports.changeStatus = async (request, response) => {
-//   const courseData = await sliderModel.findOne({
-//     _id: request.body.id,
-//   })
+exports.changeStatus = async (request, response) => {
+  const sliderData = await sliderModel.findOne({
+    _id: request.body.id,
+  })
 
-//   // console.log(courseData.length);
+  // console.log(courseData.length);
 
-//   if (courseData == null) {
-//     var res = {
-//       status: false,
-//       message: "Id not match in the database",
-//     }
+  if (sliderData == null) {
+    var res = {
+      status: false,
+      message: "Id not match in the database",
+    }
 
-//     response.send(res)
-//   }
+    response.send(res)
+  }
 
-//   await sliderModel
-//     .updateOne(
-//       {
-//         _id: request.body.id,
-//       },
-//       {
-//         $set: {
-//           status: request.body.status,
-//         },
-//       }
-//     )
-//     .then((result) => {
-//       var res = {
-//         status: true,
-//         message: "Record update succussfully",
-//         data: result,
-//       }
+  await sliderModel
+    .updateOne(
+      {
+        _id: request.body.id,
+      },
+      {
+        $set: {
+          status: request.body.status,
+        },
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record update succussfully",
+        data: result,
+      }
 
-//       response.send(res)
-//     })
-//     .catch((error) => {
-//       var res = {
-//         status: false,
-//         message: "Something went wrong",
-//       }
+      response.send(res)
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong",
+      }
 
-//       response.send(res)
-//     })
-// }
+      response.send(res)
+    })
+}
 
 // exports.delete = async (request, response) => {
-//   const courseData = await sliderModel.findOne({
+//   const sliderData = await sliderModel.findOne({
 //     _id: request.body.id,
 //     deleted_at: null,
 //   })
 
-//   if (courseData == null) {
+//   if (sliderData == null) {
 //     var res = {
 //       status: false,
 //       message: "Id not match in the database",
