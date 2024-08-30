@@ -108,41 +108,41 @@ exports.view = async (request, response) => {
       response.send(res)
     })
 }
-// exports.details = async (request, response) => {
-//   var condition = {
-//     deleted_at: null,
-//   }
+exports.details = async (request, response) => {
+  var condition = {
+    deleted_at: null,
+  }
 
-//   await sliderModel
-//     .findById(request.params.id)
-//     .then((result) => {
-//       if (result != "") {
-//         var res = {
-//           status: true,
-//           message: "Record found successfully !!",
-//           data: result,
-//         }
+  await sliderModel
+    .findById(request.params.id)
+    .then((result) => {
+      if (result != "") {
+        var res = {
+          status: true,
+          message: "Record found successfully !!",
+          data: result,
+        }
 
-//         response.send(res)
-//       } else {
-//         var res = {
-//           status: false,
-//           message: "No Record found !!",
-//           data: "",
-//         }
+        response.send(res)
+      } else {
+        var res = {
+          status: false,
+          message: "No Record found !!",
+          data: "",
+        }
 
-//         response.send(res)
-//       }
-//     })
-//     .catch((error) => {
-//       var res = {
-//         status: false,
-//         message: "Something went wrong !!",
-//       }
+        response.send(res)
+      }
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong !!",
+      }
 
-//       response.send(res)
-//     })
-// }
+      response.send(res)
+    })
+}
 
 exports.update = async (request, response) => {
   data = {
@@ -239,78 +239,78 @@ exports.changeStatus = async (request, response) => {
     })
 }
 
-// exports.delete = async (request, response) => {
-//   const sliderData = await sliderModel.findOne({
-//     _id: request.body.id,
-//     deleted_at: null,
-//   })
+exports.delete = async (request, response) => {
+  const sliderData = await sliderModel.findOne({
+    _id: request.body.id,
+    deleted_at: null,
+  })
 
-//   if (sliderData == null) {
-//     var res = {
-//       status: false,
-//       message: "Id not match in the database",
-//     }
+  if (sliderData == null) {
+    var res = {
+      status: false,
+      message: "Id not match in the database",
+    }
 
-//     response.send(res)
-//   }
+    response.send(res)
+  }
 
-//   await sliderModel
-//     .updateOne(
-//       {
-//         _id: request.body.id,
-//       },
-//       {
-//         $set: {
-//           deleted_at: Date.now(),
-//         },
-//       }
-//     )
-//     .then((result) => {
-//       var res = {
-//         status: true,
-//         message: "Record delete succussfully",
-//       }
+  await sliderModel
+    .updateOne(
+      {
+        _id: request.body.id,
+      },
+      {
+        $set: {
+          deleted_at: Date.now(),
+        },
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record delete succussfully",
+      }
 
-//       response.send(res)
-//     })
-//     .catch((error) => {
-//       var res = {
-//         status: false,
-//         message: "Something went wrong",
-//       }
+      response.send(res)
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong",
+      }
 
-//       response.send(res)
-//     })
-// }
+      response.send(res)
+    })
+}
 
-// exports.multipledelete = async (request, response) => {
-//   console.log(request.body.ids)
+exports.multipledelete = async (request, response) => {
+  console.log(request.body.ids)
 
-//   await sliderModel
-//     .updateMany(
-//       {
-//         _id: { $in: request.body.ids },
-//       },
-//       {
-//         $set: {
-//           deleted_at: Date.now(),
-//         },
-//       }
-//     )
-//     .then((result) => {
-//       var res = {
-//         status: true,
-//         message: "Record delete succussfully",
-//       }
+  await sliderModel
+    .updateMany(
+      {
+        _id: { $in: request.body.ids },
+      },
+      {
+        $set: {
+          deleted_at: Date.now(),
+        },
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record delete succussfully",
+      }
 
-//       response.send(res)
-//     })
-//     .catch((error) => {
-//       var res = {
-//         status: false,
-//         message: "Something went wrong",
-//       }
+      response.send(res)
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong",
+      }
 
-//       response.send(res)
-//     })
-// }
+      response.send(res)
+    })
+}

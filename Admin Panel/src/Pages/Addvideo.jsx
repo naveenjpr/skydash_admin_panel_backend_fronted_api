@@ -35,7 +35,7 @@ function Addvideo() {
             Video_category: result.data.data.name,
             Video_topic: result.data.data.topic,
             Video_Link: result.data.data.link,
-            Video_Stauts: result.data.data.stauts,
+            Video_Stauts: result.data.data.status,
             video_order: result.data.data.order,
           })
         })
@@ -206,7 +206,6 @@ function Addvideo() {
                   type="submit"
                   className="bg-[#4B49AC] mb-8 mt-7 text-[18px] px-8 py-2 rounded-[10px] text-white"
                   value={params.video_id == undefined ? "Submit" : "Update"}
-
                 />
                 <input
                   type="reset"

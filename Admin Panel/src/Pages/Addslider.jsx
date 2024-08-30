@@ -20,7 +20,28 @@ function Addslider() {
     Slider_Image: "",
     slider_status: "",
   })
-  console.log(inputslider)
+  useEffect(() => {
+    if (params.slider_id != undefined) {
+      axios
+        .post(
+          "http://localhost:5000/api/backend/sliders/details/" +
+            params.slider_id
+        )
+        .then((result) => {
+          console.log(result.data.data)
+          setInputslider({
+            Slider_Heading: result.data.data.Slider_Heading,
+            Slider_Image: result.data.data.image,
+            Slider_SubHeading: result.data.data.Slider_SubHeading,
+
+            slider_status: result.data.data.status,
+          })
+        })
+        .catch((error) => {
+          toast.error("something want wrong")
+        })
+    }
+  }, [])
   let sliderHandler = (event) => {
     event.preventDefault()
 
@@ -60,10 +81,10 @@ function Addslider() {
           console.log(error)
         })
     } else {
-      dataSave.id = params.course_id
+      dataSave.id = params.slider_id
       axios
         .put(
-          "http://localhost:5000/api/backend/courses/update",
+          "http://localhost:5000/api/backend/sliders/update",
           toFormData(dataSave)
         )
         .then((result) => {

@@ -23,15 +23,15 @@ const uploadImage = multer({ storage: storage }).single("image")
 module.exports = (app) => {
   route.post("/add", uploadImage, slidersController.create)
   route.post("/view", upload.none(), slidersController.view)
-  // route.post("/details/:id", upload.none(), slidersController.details)
+  route.post("/details/:id", upload.none(), slidersController.details)
   route.put("/update", uploadImage, slidersController.update)
   route.put("/change-status", upload.none(), slidersController.changeStatus)
-  // route.post("/delete", upload.none(), slidersController.delete)
-  // route.post(
-  //   "/multiple-delete",
-  //   upload.none(),
-  // slidersController.multipledelete
-  // )
+  route.post("/delete", upload.none(), slidersController.delete)
+  route.post(
+    "/multiple-delete",
+    upload.none(),
+  slidersController.multipledelete
+  )
 
   app.use("/api/backend/sliders", route)
 }

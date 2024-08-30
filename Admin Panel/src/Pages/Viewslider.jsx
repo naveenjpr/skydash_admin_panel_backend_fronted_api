@@ -5,11 +5,14 @@ import Sidebar from "../Common/Sidebar"
 import Footer from "../Common/Footer"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { Link } from "react-router-dom"
 
 function Viewslider() {
   let { changemenu } = useContext(mainContext)
   const [APislider, setAPislider] = useState(false)
   let [changeStatusValue, setChangeStatus] = useState(false)
+  let [sliderIds, setsliderIds] = useState([])
+
   let [imagePath, setImagePath] = useState()
 
   let changeStatus = (id, status) => {
@@ -31,7 +34,60 @@ function Viewslider() {
         toast.error("Something went wrong")
       })
   }
+  let multipleSelect = (id) => {
+    let updatesliderIds = [...sliderIds]
 
+    if (updatesliderIds.includes(id)) {
+      updatesliderIds = updatesliderIds.filter((slider_id) => {
+        return slider_id != id
+      })
+    } else {
+      updatesliderIds.push(id)
+    }
+
+    setsliderIds(updatesliderIds)
+  }
+  let singleDelete = (id) => {
+    let data = {
+      id: id,
+    }
+    axios
+      .post("http://localhost:5000/api/backend/sliders/delete", data)
+      .then((result) => {
+        console.log(result.data)
+        if (result.data.status == true) {
+          toast.success(result.data.message)
+          setChangeStatus(!changeStatusValue)
+          window.confirm("Are you sure want delete this???")
+        } else {
+          toast.error(result.data.message)
+        }
+      })
+      .catch((error) => {
+        toast.error("Something went wrong")
+      })
+  }
+  let multipleDeleteCourse = () => {
+    let data = {
+      ids: sliderIds,
+    }
+
+    axios
+      .post("http://localhost:5000/api/backend/sliders/multiple-delete", data)
+      .then((result) => {
+        if (result.data.status == true) {
+          toast.success(result.data.message)
+          setChangeStatus(!changeStatusValue)
+        } else {
+          toast.error(result.data.message)
+        }
+      })
+      .catch((error) => {
+        toast.error("Something went wrong")
+        console.log(error)
+      })
+    console.log(data)
+  }
   useEffect(() => {
     axios
       .post("http://localhost:5000/api/backend/sliders/view")
@@ -59,6 +115,12 @@ function Viewslider() {
           } relative px-[30px] py-[50px] h-[92vh] bg-[#F5F7FF]`}
         >
           <h1 className="text-[25px] font-[500] mb-[10px]">Slider Table</h1>
+          <button
+            className="text-[25px] font-[500] mb-[10px] bg-[red] text-white px-[10px]"
+            onClick={() => multipleDeleteCourse()}
+          >
+            Multiple delete
+          </button>
           <div className="">
             <div className="bg-white w-[100%] mb-[50px] p-4 h-full rounded-[20px]">
               <table>
@@ -76,6 +138,12 @@ function Viewslider() {
                       console.log(v)
                       return (
                         <tr key={i}>
+                          <td>
+                            <input
+                              type="checkbox"
+                              onClick={() => multipleSelect(v._id)}
+                            />
+                          </td>
                           <td>{i + 1}</td>
                           <td>{v.Slider_Heading}</td>
                           <td>{v.Slider_SubHeading}</td>
@@ -106,10 +174,15 @@ function Viewslider() {
                             )}
                           </td>
                           <td className="text-center">
-                            <button className="bg-green-500 text-white px-5 mr-5 py-1">
-                              Edit
-                            </button>
-                            <button className="bg-red-400 text-white px-5 py-1">
+                            <Link to={`/addslider/${v._id}`}>
+                              <button className="bg-green-500 text-white px-5 mr-5 py-1">
+                                Edit
+                              </button>
+                            </Link>
+                            <button
+                              className="bg-red-400 text-white px-5 py-1"
+                              onClick={() => singleDelete(v._id)}
+                            >
                               Delete
                             </button>
                           </td>
