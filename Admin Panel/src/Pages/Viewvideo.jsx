@@ -50,21 +50,34 @@ function Viewvideo() {
     let data = {
       id: id,
     }
-
-    axios
-      .post("http://localhost:5000/api/backend/videos/delete", data)
-      .then((result) => {
-        if (result.data.status == true) {
-          toast.success(result.data.message)
-          setChangeStatus(!changeStatusValue)
-          window.confirm("Are you sure want delete this???")
-        } else {
-          toast.error(result.data.message)
-        }
-      })
-      .catch((error) => {
-        toast.error("Something went wrong")
-      })
+    if (window.confirm("Are you sure want delete th")) {
+      axios
+        .post("http://localhost:5000/api/backend/videos/delete", data)
+        .then((result) => {
+          if (result.data.status == true) {
+            toast.success(result.data.message)
+            setChangeStatus(!changeStatusValue)
+          } else {
+            toast.error(result.data.message)
+          }
+        })
+        .catch((error) => {
+          toast.error("Something went wrong")
+        })
+    } else {
+      axios
+        .post("http://localhost:5000/api/backend/videos/view")
+        .then((result) => {
+          if (result.data.data) {
+            setvideoshow(result.data.data)
+          } else {
+            setvideoshow([])
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
   }
 
   let multipleDeleteCourse = () => {

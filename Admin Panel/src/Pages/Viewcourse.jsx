@@ -54,21 +54,35 @@ function Viewcourse() {
     let data = {
       id: id,
     }
-    axios
-      .post("http://localhost:5000/api/backend/courses/delete", data)
-      .then((result) => {
-        console.log(result.data)
-        if (result.data.status == true) {
-          toast.success(result.data.message)
-          setChangeStatus(!changeStatusValue)
-          window.confirm("Are you sure want delete this???")
-        } else {
-          toast.error(result.data.message)
-        }
-      })
-      .catch((error) => {
-        toast.error("Something went wrong")
-      })
+    if (window.confirm("are you sure want delete ")) {
+      axios
+        .post("http://localhost:5000/api/backend/courses/delete", data)
+        .then((result) => {
+          console.log(result.data)
+          if (result.data.status == true) {
+            toast.success(result.data.message)
+            setChangeStatus(!changeStatusValue)
+          } else {
+            toast.error(result.data.message)
+          }
+        })
+        .catch((error) => {
+          toast.error("Something went wrong")
+        })
+    } else {
+      axios
+        .post("http://localhost:5000/api/backend/courses/view")
+        .then((result) => {
+          if (result.data.data) {
+            setCourses(result.data.data)
+          } else {
+            setCourses([])
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
   }
 
   let multipleDeleteCourse = () => {
@@ -155,7 +169,7 @@ function Viewcourse() {
                         <td>{v.name}</td>
                         <td>{v.price}</td>
                         <td>{v.duration}</td>
-                        
+
                         <td>
                           {" "}
                           <img

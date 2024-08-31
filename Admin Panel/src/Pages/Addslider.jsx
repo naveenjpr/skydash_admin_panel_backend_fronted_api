@@ -62,6 +62,7 @@ function Addslider() {
       dataSave.image = form.get("slider_image")
     }
     if (params.slider_id == undefined) {
+      // const form = new FormData(event.target)
       axios
         .post(
           "http://localhost:5000/api/backend/sliders/add",

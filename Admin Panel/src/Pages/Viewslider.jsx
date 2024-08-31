@@ -14,6 +14,7 @@ function Viewslider() {
   let [sliderIds, setsliderIds] = useState([])
 
   let [imagePath, setImagePath] = useState()
+  console.log(imagePath)
 
   let changeStatus = (id, status) => {
     const data = {
@@ -125,6 +126,7 @@ function Viewslider() {
             <div className="bg-white w-[100%] mb-[50px] p-4 h-full rounded-[20px]">
               <table>
                 <tr>
+                  <th></th>
                   <th>S.no</th>
                   <th>Slider Heading</th>
                   <th>Slider sub-heading</th>
@@ -135,7 +137,6 @@ function Viewslider() {
                 </tr>
                 {APislider.length >= 1
                   ? APislider.map((v, i) => {
-                      console.log(v)
                       return (
                         <tr key={i}>
                           <td>

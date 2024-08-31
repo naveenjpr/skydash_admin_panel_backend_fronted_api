@@ -89,6 +89,7 @@ exports.view = async (request, response) => {
         }
 
         response.send(res)
+        console.log(res)
       } else {
         var res = {
           status: false,
