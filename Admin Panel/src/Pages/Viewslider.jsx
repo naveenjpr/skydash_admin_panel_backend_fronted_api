@@ -52,21 +52,29 @@ function Viewslider() {
     let data = {
       id: id,
     }
-    axios
-      .post("http://localhost:5000/api/backend/sliders/delete", data)
-      .then((result) => {
-        console.log(result.data)
-        if (result.data.status == true) {
-          toast.success(result.data.message)
-          setChangeStatus(!changeStatusValue)
-          window.confirm("Are you sure want delete this???")
-        } else {
-          toast.error(result.data.message)
-        }
-      })
-      .catch((error) => {
-        toast.error("Something went wrong")
-      })
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    )
+
+    if (isConfirmed) {
+      axios
+        .post("http://localhost:5000/api/backend/sliders/delete", data)
+        .then((result) => {
+          console.log(result.data)
+
+          if (result.data.status == true) {
+            toast.success(result.data.message)
+            setChangeStatus(!changeStatusValue)
+          } else {
+            toast.error(result.data.message)
+          }
+        })
+        .catch((error) => {
+          toast.error("Something went wrong")
+        })
+    } else {
+      console.log("Deletion canceled by the user.")
+    }
   }
   let multipleDeleteCourse = () => {
     let data = {
@@ -135,62 +143,71 @@ function Viewslider() {
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
-                {APislider.length >= 1
-                  ? APislider.map((v, i) => {
-                      return (
-                        <tr key={i}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              onClick={() => multipleSelect(v._id)}
-                            />
-                          </td>
-                          <td>{i + 1}</td>
-                          <td>{v.Slider_Heading}</td>
-                          <td>{v.Slider_SubHeading}</td>
-                          {/* <td>This is new React Course</td> */}
-                          <td>
-                            <img
-                              src={imagePath + v.image}
-                              width={150}
-                              height={150}
-                            />
-                          </td>
-                          <td>
-                            {" "}
-                            {v.status == 1 ? (
-                              <button
-                                className="px-5 py-1 mr-5 text-white bg-green-500"
-                                onClick={() => changeStatus(v._id, v.status)}
-                              >
-                                Active
-                              </button>
-                            ) : (
-                              <button
-                                className="px-5 py-1 text-white bg-red-400"
-                                onClick={() => changeStatus(v._id, v.status)}
-                              >
-                                Inactive
-                              </button>
-                            )}
-                          </td>
-                          <td className="text-center">
-                            <Link to={`/addslider/${v._id}`}>
-                              <button className="bg-green-500 text-white px-5 mr-5 py-1">
-                                Edit
-                              </button>
-                            </Link>
+                {APislider.length >= 1 ? (
+                  APislider.map((v, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            onClick={() => multipleSelect(v._id)}
+                          />
+                        </td>
+                        <td>{i + 1}</td>
+                        <td>{v.Slider_Heading}</td>
+                        <td>{v.Slider_SubHeading}</td>
+                        {/* <td>This is new React Course</td> */}
+                        <td>
+                          <img
+                            src={imagePath + v.image}
+                            width={150}
+                            height={150}
+                          />
+                        </td>
+                        <td>
+                          {" "}
+                          {v.status == 1 ? (
                             <button
-                              className="bg-red-400 text-white px-5 py-1"
-                              onClick={() => singleDelete(v._id)}
+                              className="px-5 py-1 mr-5 text-white bg-green-500"
+                              onClick={() => changeStatus(v._id, v.status)}
                             >
-                              Delete
+                              Active
                             </button>
-                          </td>
-                        </tr>
-                      )
-                    })
-                  : ""}
+                          ) : (
+                            <button
+                              className="px-5 py-1 text-white bg-red-400"
+                              onClick={() => changeStatus(v._id, v.status)}
+                            >
+                              Inactive
+                            </button>
+                          )}
+                        </td>
+                        <td className="text-center">
+                          <Link to={`/addslider/${v._id}`}>
+                            <button className="bg-green-500 text-white px-5 mr-5 py-1">
+                              Edit
+                            </button>
+                          </Link>
+                          <button
+                            className="bg-red-400 text-white px-5 py-1"
+                            onClick={() => singleDelete(v._id)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })
+                ) : (
+                  <div
+                    className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                    role="status"
+                  >
+                    <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                      Loading...
+                    </span>
+                  </div>
+                )}
               </table>
             </div>
           </div>

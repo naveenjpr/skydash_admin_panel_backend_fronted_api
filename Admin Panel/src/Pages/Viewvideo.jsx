@@ -154,58 +154,67 @@ function Viewvideo() {
                   <th width="80">Status</th>
                   <th width="80">Action</th>
                 </tr>
-                {videoshow.length >= 1
-                  ? videoshow.map((v, i) => {
-                      return (
-                        <tr>
-                          <td>
-                            <input
-                              type="checkbox"
-                              onClick={() => multipleSelect(v._id)}
-                            />
-                          </td>
-                          <td>{i + 1}</td>
-                          <td>{v.name}</td>
-                          <td>{v.topic}</td>
-                          <Link to={v.link} target="_blank">
-                            <td className="hover:text-[blue]">{v.link}</td>
+                {videoshow.length >= 1 ? (
+                  videoshow.map((v, i) => {
+                    return (
+                      <tr>
+                        <td>
+                          <input
+                            type="checkbox"
+                            onClick={() => multipleSelect(v._id)}
+                          />
+                        </td>
+                        <td>{i + 1}</td>
+                        <td>{v.name}</td>
+                        <td>{v.topic}</td>
+                        <Link to={v.link} target="_blank">
+                          <td className="hover:text-[blue]">{v.link}</td>
+                        </Link>
+
+                        <td>
+                          {v.status == 1 ? (
+                            <button
+                              className="px-1 py-1 mr-1 text-white bg-green-500"
+                              onClick={() => changeStatus(v._id, v.status)}
+                            >
+                              Active
+                            </button>
+                          ) : (
+                            <button
+                              className="px-1 py-1 text-white bg-red-400"
+                              onClick={() => changeStatus(v._id, v.status)}
+                            >
+                              Inactive
+                            </button>
+                          )}
+                        </td>
+                        <td className="text-center w-[100px]">
+                          <Link to={`/addvideo/${v._id}`}>
+                            <button className="bg-green-500 text-white px-1 mr-1 py-1 w-[100%]">
+                              Edit
+                            </button>
                           </Link>
 
-                          <td>
-                            {v.status == 1 ? (
-                              <button
-                                className="px-1 py-1 mr-1 text-white bg-green-500"
-                                onClick={() => changeStatus(v._id, v.status)}
-                              >
-                                Active
-                              </button>
-                            ) : (
-                              <button
-                                className="px-1 py-1 text-white bg-red-400"
-                                onClick={() => changeStatus(v._id, v.status)}
-                              >
-                                Inactive
-                              </button>
-                            )}
-                          </td>
-                          <td className="text-center w-[100px]">
-                            <Link to={`/addvideo/${v._id}`}>
-                              <button className="bg-green-500 text-white px-1 mr-1 py-1 w-[100%]">
-                                Edit
-                              </button>
-                            </Link>
-
-                            <button
-                              className="bg-red-400 text-white px-1 py-1 w-[100%]"
-                              onClick={() => singleDelete(v._id)}
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    })
-                  : "api data not show"}
+                          <button
+                            className="bg-red-400 text-white px-1 py-1 w-[100%]"
+                            onClick={() => singleDelete(v._id)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })
+                ) : (
+                  <div
+                    className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                    role="status"
+                  >
+                    <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                      Loading...
+                    </span>
+                  </div>
+                )}
               </table>
             </div>
           </div>

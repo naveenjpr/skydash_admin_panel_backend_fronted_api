@@ -58,8 +58,8 @@ function Addslider() {
       status: status,
     }
 
-    if (form.get("slider_image") != "") {
-      dataSave.image = form.get("slider_image")
+    if (form.get("Slider_Image") != "") {
+      dataSave.image = form.get("Slider_Image")
     }
     if (params.slider_id == undefined) {
       // const form = new FormData(event.target)
@@ -150,8 +150,8 @@ function Addslider() {
                 />
                 Slider_Image
                 <input
-                  name="Slider_Image"
                   type="file"
+                  name="Slider_Image"
                   id="file-input"
                   className="border hidden border-gray-400 w-full h-[50px] mb-1 mt-2 "
                 />
