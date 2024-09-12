@@ -1,16 +1,49 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import logo from "../img/logo (1).svg"
 import minlogo from "../img/logo-mini.svg"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { mainContext } from "../Context"
+import { useNavigate } from "react-router"
+import { Cookie } from "@mui/icons-material"
+import { Cookies } from "react-cookie"
+import axios from "axios"
+import { ToastContainer, toast } from "react-toastify"
 
 function Header() {
   let { changemenu, setchangeMenu } = useContext(mainContext)
+  let nav = useNavigate()
+  const cookies = new Cookies()
 
+  let Logout = () => {
+    cookies.remove("token")
+    nav("/")
+  }
+  useEffect(() => {
+    const userToken = cookies.get("token")
+
+    axios
+      .post("http://localhost:5000/api/fronted/users/profile", "", {
+        headers: {
+          authorization: userToken,
+        },
+      })
+      .then((success) => {
+        if (success.data.token_error == true) {
+          cookies.remove("token")
+          nav("/")
+        } else {
+          console.log(success.data)
+        }
+      })
+      .catch((error) => {
+        toast.error("something want wrong !!")
+      })
+  }, [])
   return (
     <>
       <header>
+        <ToastContainer />
         <nav className="bg-white border-gray-200  py-2.5  shadow-lg relative z-[999]">
           <div className="flex  justify-between items-center mx-auto ">
             <div
@@ -38,8 +71,8 @@ function Header() {
               />
               <div>
                 <a
-                  href="#"
-                  className="text-gray-800   focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                  onClick={() => Logout()}
+                  className="text-gray-800 cursor-pointer  focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
                 >
                   Log Out
                 </a>

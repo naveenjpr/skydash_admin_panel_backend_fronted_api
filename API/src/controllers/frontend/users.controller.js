@@ -1,6 +1,9 @@
 const nodemailer = require("nodemailer")
-const bcrypt = require("bcrypt")
+var bcrypt = require("bcryptjs")
 const userModel = require("../../models/users")
+var jwt = require("jsonwebtoken")
+
+var secretKey = "123456789"
 
 exports.sendMail = async (request, response) => {
   const transporter = nodemailer.createTransport({
@@ -46,15 +49,24 @@ exports.register = async (request, response) => {
     email: request.body.email,
     mobile_number: request.body.mobile_number,
     password: bcrypt.hashSync(request.body.password, 10),
+    // password: request.body.password,
   })
 
   await data
     .save()
     .then((result) => {
+      var token = jwt.sign(
+        {
+          userData: result,
+        },
+        secretKey,
+        { expiresIn: "1h" }
+      )
+
       var resp = {
         status: true,
         message: "Record create successfully !!",
-        result: result,
+        token: token,
       }
 
       response.send(resp)
@@ -74,6 +86,7 @@ exports.login = async (request, response) => {
     .findOne({
       email: request.body.email,
     })
+
     .then((result) => {
       if (result) {
         var compare = bcrypt.compareSync(request.body.password, result.password)
@@ -81,17 +94,16 @@ exports.login = async (request, response) => {
         if (compare) {
           var token = jwt.sign(
             {
-              email: result.email,
+              userData: result,
             },
             secretKey,
-            { expiresIn: "1h" }
+            { expiresIn: "1d" }
           )
 
           var resp = {
             status: true,
             message: "Login successfully !!",
             token: token,
-            result: result,
           }
         } else {
           var resp = {
@@ -117,4 +129,50 @@ exports.login = async (request, response) => {
 
       response.send(resp)
     })
+}
+
+exports.profile = async (request, response) => {
+  console.log(request.headers.authorization)
+
+  if (request.headers.authorization == undefined) {
+    var res = {
+      status: false,
+      token_error: true,
+      message: "token required",
+    }
+    response.send(res)
+  }
+  if (request.headers.authorization == "") {
+    var res = {
+      status: false,
+      token_error: true,
+      message: "Invalid token required",
+    }
+
+    response.send(res)
+  }
+
+  jwt.verify(
+    request.headers.authorization,
+    secretKey,
+    function (error, result) {
+      if (error) {
+        var res = {
+          status: false,
+          token_error: true,
+          message: "Incorrect token",
+        }
+
+        response.send(res)
+      } else {
+        var res = {
+          status: true,
+          message: "Profile found.",
+          data: result,
+        }
+
+        response.send(res)
+      }
+    }
+  )
 }
