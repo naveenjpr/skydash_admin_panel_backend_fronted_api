@@ -20,6 +20,7 @@ require("./src/routes/backend/categories.routes")(server)
 require("./src/routes/backend/courses.routes")(server)
 require("./src/routes/backend/videos.routes")(server)
 require("./src/routes/backend/sliders.routes")(server)
+require("./src/routes/backend/user.routes")(server)
 
 // fronted url
 require("./src/routes/frontend/courses.routes")(server)

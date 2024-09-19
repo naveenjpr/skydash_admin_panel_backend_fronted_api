@@ -4,7 +4,10 @@ var secretKey = "123456789"
 
 exports.view = async (request, response) => {
   console.log("first")
-  console.log(request.headers.authorization.split(" ")[1])
+  console.log(request.headers.authorization)
+
+  // if (!request.headers.authorization)
+    // return response.status(401).json({ message: "please provoide a token" })
 
   if (request.headers.authorization.split(" ")[1] == undefined) {
     var res = {
@@ -26,30 +29,7 @@ exports.view = async (request, response) => {
 
     response.send(res)
   }
-  if (request.body.token == undefined) {
-    var res = {
-      status: false,
-      message: "token required",
-    }
-    response.send(res)
-  }
 
-  if (request.body.token == "") {
-    var res = {
-      status: false,
-      message: "Invalid token ",
-    }
-
-    response.send(res)
-  }
-
-  jwt.verify(request.body.token, secretKey, function (error, result) {
-    if (error) {
-      console.log(error)
-    } else {
-      console.log(result)
-    }
-  })
   // verify a token symmetric
   jwt.verify(
     request.headers.authorization.split(" ")[1],
@@ -99,8 +79,6 @@ exports.view = async (request, response) => {
     }
   }
 
-  console.log(condition)
-
   await coursesModel
     .find(condition)
     .sort({ order: "asc" }, { _id: "desc" })
@@ -128,6 +106,7 @@ exports.view = async (request, response) => {
         status: false,
         message: "Something went wrong !!",
       }
+      console.log(error)
 
       response.send(res)
     })

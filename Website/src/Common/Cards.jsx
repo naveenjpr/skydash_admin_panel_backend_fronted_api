@@ -4,13 +4,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 
 import axios from "axios"
+import { Cookies } from "react-cookie"
 
 function Cards() {
   let [cardData, setcardData] = useState([])
+  console.log(cardData)
+  let cookies = new Cookies()
 
   useEffect(() => {
+    var token = cookies.get("token")
+
     axios
-      .post("http://localhost:5000/api/fronted/courses/view")
+      .post("http://localhost:5000/api/fronted/courses/view", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((result) => {
         // console.log(result.data.data)
         setcardData(result.data.data)

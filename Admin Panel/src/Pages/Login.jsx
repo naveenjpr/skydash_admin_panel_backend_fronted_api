@@ -19,7 +19,7 @@ function Login() {
     }
 
     axios
-      .post("http://localhost:5000/api/fronted/users/login", data)
+      .post("http://localhost:5000/api/backend/users/login", data)
       .then((result) => {
         if (result.data.status == true) {
           cookies.set("token", result.data.token)

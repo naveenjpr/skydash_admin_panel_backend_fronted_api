@@ -7,7 +7,7 @@ function DashboardItems() {
     <>
     {
       ddata.map(v=>{
-        console.log(v.color)
+        // console.log(v.color)
         return(
             <div className={`w-full px-[15px] py-[18px] rounded-[20px] text-white `} style={{background:v.color}}>
             <h3 className=''>Today’s Bookings</h3>

@@ -4,20 +4,25 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Name is required"],
-    match: /^[a-zA-Z ]{2,90}$/,
+    minLenght:3,
+    maxLength:25,
   },
   email: {
     type: String,
     required : [true, 'email is required'],
+    unique:true,
   },
   mobile_number: {
     type: Number,
     required: [true, "mobile_number is required"],
     match: /^[0-9]{1,15}$/,
+    unique:true,
+
   },
   password: {
     type: String,
     required: [true, "password is required"],
+    
   },
   
   status: {
