@@ -4,10 +4,11 @@ var secretKey = "123456789"
 
 exports.view = async (request, response) => {
   console.log("first")
-  console.log(request.headers.authorization)
+  
+  console.log(request.headers.authorization.split(" ")[1])
 
   // if (!request.headers.authorization)
-    // return response.status(401).json({ message: "please provoide a token" })
+  // return response.status(401).json({ message: "please provoide a token" })
 
   if (request.headers.authorization.split(" ")[1] == undefined) {
     var res = {
@@ -44,7 +45,7 @@ exports.view = async (request, response) => {
         response.send(res)
       } else {
         var userDetails = result
-        console.log(result)
+        console.log(userDetails)
       }
       // console.log(decoded.foo) // bar
     }
@@ -73,11 +74,7 @@ exports.view = async (request, response) => {
     }
   }
 
-  if (request.body.status != undefined) {
-    if (request.body.status != "") {
-      condition.status = request.body.status
-    }
-  }
+  
 
   await coursesModel
     .find(condition)

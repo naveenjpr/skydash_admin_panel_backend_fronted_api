@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer")
 var bcrypt = require("bcryptjs")
-const userModel = require("../../models/users")
+const userModel = require("../../models/admin.user")
 var jwt = require("jsonwebtoken")
 
 var secretKey = "123456789"
@@ -72,9 +72,17 @@ exports.register = async (request, response) => {
       response.send(resp)
     })
     .catch((error) => {
-      var resp = {
-        status: false,
-        message: "Something went wrong !!",
+      var resp
+      if (error.keyPattern.email == 1) {
+        resp = {
+          status: false,
+          message: "email id allready use",
+        }
+      } else if (error.keyPattern.mobile_number == 1) {
+        resp = {
+          status: false,
+          message: "mobile_number  allready ",
+        }
       }
 
       response.send(resp)

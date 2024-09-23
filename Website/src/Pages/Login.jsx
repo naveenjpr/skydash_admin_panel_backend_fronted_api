@@ -1,14 +1,14 @@
-import React, { useEffect } from "react"
-
+import React, { useContext, useEffect } from "react"
+import { ToastContainer, toast } from "react-toastify"
 import Footer from "../Common/Footer"
 import HeaderTwo from "../Common/HeaderTwo"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
-
 import { Cookies, useCookies } from "react-cookie"
-import { ToastContainer, toast } from "react-toastify"
+import { loginContext } from "../Context/MainContext"
 
 function Login() {
+  let { tokenvalue, settokenvalue } = useContext(loginContext)
   let nav = useNavigate()
   let cookies = new Cookies()
   let loginHandler = (event) => {
@@ -21,9 +21,12 @@ function Login() {
       .post("http://localhost:5000/api/fronted/users/login", data)
       .then((result) => {
         if (result.data.status == true) {
-          cookies.set("token", result.data.token)
-          toast.success("login success fully")
-
+          let token = result.data.token
+          console.log(token)
+          settokenvalue(token)
+          localStorage.setItem("token", token)
+          // cookies.set("token", result.data.token)
+          // toast.success("login success fully")
           nav("/")
         } else {
           toast.error(result.data.message)
@@ -33,13 +36,13 @@ function Login() {
         toast.error("someyjing want wrong")
       })
   }
-  // useEffect(() => {
-  //   var token = cookies.get("token")
-
-  //   if (token != undefined) {
-  //     nav("/")
-  //   }
-  // }, [])
+  useEffect(() => {
+    // var token = cookies.get("token")
+    var token = localStorage.getItem("token")
+    if (token != undefined) {
+      nav("/")
+    }
+  }, [tokenvalue])
   return (
     <>
       <HeaderTwo />

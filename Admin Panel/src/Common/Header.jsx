@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { mainContext } from "../Context"
 import { useNavigate } from "react-router"
-import { Cookie } from "@mui/icons-material"
+
 import { Cookies } from "react-cookie"
 import axios from "axios"
 import { ToastContainer, toast } from "react-toastify"
@@ -13,6 +13,7 @@ import { ToastContainer, toast } from "react-toastify"
 function Header() {
   let { changemenu, setchangeMenu } = useContext(mainContext)
   const [profileshow, setprofileshow] = useState("")
+  console.log(profileshow)
 
   let nav = useNavigate()
   const cookies = new Cookies()
@@ -33,14 +34,14 @@ function Header() {
       .then((success) => {
         console.log(success.data.data.userData.name)
         setprofileshow(success.data.data.userData.name)
-        if (success.data.token_error == true) {
-          // setprofileshow(success.data.data.userData.name)
-          cookies.remove("token")
+        // if (success.data.token_error == true) {
+        //   // setprofileshow(success.data.data.userData.name)
+        //   // cookies.remove("token")
 
-          nav("/")
-        } else {
-          // console.log(success.data)
-        }
+        //   nav("/")
+        // } else {
+        //   // console.log(success.data)
+        // }
       })
       .catch((error) => {
         toast.error("something want wrong !!")

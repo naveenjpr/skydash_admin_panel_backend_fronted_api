@@ -7,22 +7,28 @@ import axios from "axios"
 import { Cookies } from "react-cookie"
 
 function Cards() {
-  let [cardData, setcardData] = useState([])
-  console.log(cardData)
+  let [tokenvalue, settokenvalue] = useState([] )
+  console.log(tokenvalue)
   let cookies = new Cookies()
 
   useEffect(() => {
-    var token = cookies.get("token")
+    // var token = cookies.get("token")
+    let token = localStorage.getItem("token")
 
     axios
-      .post("http://localhost:5000/api/fronted/courses/view", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .post(
+        "http://localhost:5000/api/fronted/courses/view" + token
+
+        // {
+        //   headers: {
+        //     authorization: "Bearer" + token,
+        //   },
+
+        // }
+      )
       .then((result) => {
-        // console.log(result.data.data)
-        setcardData(result.data.data)
+        console.log(result.data.data)
+        settokenvalue(result.data.data)
       })
       .catch((error) => {
         console.log(error)
@@ -74,8 +80,8 @@ function Cards() {
   //  ]
   return (
     <>
-      {cardData.length > 0 ? (
-        cardData.map((v, i) => {
+      {tokenvalue.length > 0 ? (
+        tokenvalue.map((v, i) => {
           return (
             <div
               className='w-full hover:border-blue-600 duration-[1s] border rounded-[5px] py-[40px] font-["Nunito]'

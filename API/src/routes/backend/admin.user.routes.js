@@ -1,6 +1,6 @@
 const express = require("express")
 const route = express.Router()
-const userController = require("../../controllers/backend/users.controller")
+const userController = require("../../controllers/backend/admin.user.controller")
 
 module.exports = (app) => {
   route.post("/send-mail", userController.sendMail)
