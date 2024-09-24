@@ -80,7 +80,7 @@ exports.view = async (request, response) => {
   console.log(pageNumber)
   let skip
   let limit = 5
-  if (pageNumber == undefined || pageNumber == 1) {
+  if (pageNumber === undefined || pageNumber === 1) {
     skip = 0
   } else {
     skip = (pageNumber - 1) * limit
@@ -89,9 +89,9 @@ exports.view = async (request, response) => {
 
   await coursesModel
     .find(condition)
-    .skip(0)
+    .skip(skip)
     .limit(limit)
-    .sort({ order: "asc" }, { _id: "desc" })
+    .sort({ created_at: "desc" }, { _id: "desc" })
 
     .then((result) => {
       if (result.length > 0) {
