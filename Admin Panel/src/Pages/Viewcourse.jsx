@@ -10,9 +10,9 @@ import { Link } from "react-router-dom"
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
 
 function Viewcourse() {
-  const [pageNumber, setpageNumber] = useState(1)
-  const [tot, settot] = useState([])
-  const [limit, setlimit] = useState(5)
+  const [pageNumber, setpageNumber] = useState(1)//pagination
+  const [tot, settot] = useState(0)//pagination
+  const [limit, setlimit] = useState(5) //pagination
   console.log(tot)
   console.log(pageNumber)
   let { changemenu } = useContext(mainContext)
@@ -116,11 +116,11 @@ function Viewcourse() {
 
   useEffect(() => {
     axios
-      .post(`http://localhost:5000/api/backend/courses/view?pageNumber=${pageNumber}`)
+      .post(`http://localhost:5000/api/backend/courses/view/?pageNumber=${pageNumber}`)
       .then((result) => {
         if (result.data.status == true) {
           settot(result.data.tot) //pagenation total
-          console.log("pagi", result.data.data) //pagenation total
+          console.log("pagi", result.data.tot) //pagenation total
 
           setImagePath(result.data.imagePath)
 
@@ -135,17 +135,18 @@ function Viewcourse() {
   // pagination logic start
   let ChangePageNumber = (para) => {
     let pNumber
-    if (para == 1) {
+    if (para == "first") {
       pNumber = 1
     }
-    if (para == "Previous") {
+    else if (para == "Previous") {
       pNumber = pageNumber - 1
     }
-    if (para == "Next") {
+    else if(para == "Next") {
       pNumber = pageNumber + 1
     }
-    if (para == "Last") {
-      pNumber = Math.ceil(tot / 5)
+    else if(para == "Last") {
+      pNumber = (Math.ceil(tot / limit))
+    
     }
     setpageNumber(pNumber)
   }
@@ -193,7 +194,7 @@ function Viewcourse() {
                             onClick={() => multipleSelect(v._id)}
                           />
                         </td>
-                        <td>{(pageNumber - 1) * limit + i + 1}</td>
+                        <td>{((pageNumber - 1) * limit )+ i + 1}</td>
                         <td>{v.name}</td>
                         <td>{v.price}</td>
                         <td>{v.duration}</td>
@@ -202,8 +203,8 @@ function Viewcourse() {
                           {" "}
                           <img
                             src={imagePath + v.image}
-                            width={150}
-                            height={150}
+                            width={100}
+                            height={100}
                           />
                         </td>
                         <td>
@@ -256,11 +257,11 @@ function Viewcourse() {
               <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                 <div className="flex flex-1 justify-center ">
                   <button
-                    onClick={() => ChangePageNumber(1)}
-                    href="#"
+                    onClick={() => ChangePageNumber("first")}
+                  
                     className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                   >
-                    1
+                    first
                   </button>
                   <button
                     onClick={() => ChangePageNumber("Previous")}
