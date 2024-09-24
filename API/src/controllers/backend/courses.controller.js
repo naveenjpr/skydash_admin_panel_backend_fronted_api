@@ -76,10 +76,23 @@ exports.view = async (request, response) => {
   }
 
   console.log(condition)
+  let pageNumber = request.query.pageNumber
+  console.log(pageNumber)
+  let skip
+  let limit = 5
+  if (pageNumber == undefined || pageNumber == 1) {
+    skip = 0
+  } else {
+    skip = (pageNumber - 1) * limit
+  }
+  // console.log(skip, limit)
 
   await coursesModel
     .find(condition)
+    .skip(0)
+    .limit(limit)
     .sort({ order: "asc" }, { _id: "desc" })
+
     .then((result) => {
       if (result.length > 0) {
         var res = {
@@ -87,9 +100,11 @@ exports.view = async (request, response) => {
           message: "Record found successfully !!",
           imagePath: "http://localhost:5000/uploads/courses/",
           data: result,
+          tot: result.length,
         }
 
         response.send(res)
+        console.log(result)
       } else {
         var res = {
           status: false,
@@ -100,6 +115,7 @@ exports.view = async (request, response) => {
         response.send(res)
       }
     })
+
     .catch((error) => {
       var res = {
         status: false,

@@ -7,8 +7,14 @@ import axios from "axios"
 import "react-toastify/dist/ReactToastify.css"
 import { ToastContainer, toast } from "react-toastify"
 import { Link } from "react-router-dom"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
 
 function Viewcourse() {
+  const [pageNumber, setpageNumber] = useState(1)
+  const [tot, settot] = useState([])
+  const [limit, setlimit] = useState(5)
+  console.log(tot)
+  console.log(pageNumber)
   let { changemenu } = useContext(mainContext)
 
   let [courses, setCourses] = useState([])
@@ -74,6 +80,8 @@ function Viewcourse() {
         .post("http://localhost:5000/api/backend/courses/view")
         .then((result) => {
           if (result.data.data) {
+            settot(result.data.data.length) //pagenation total
+            //pagenation total
             setCourses(result.data.data)
           } else {
             setCourses([])
@@ -104,23 +112,43 @@ function Viewcourse() {
         toast.error("Something went wrong")
         console.log(error)
       })
-    console.log(data)
   }
 
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/backend/courses/view")
+      .post(`http://localhost:5000/api/backend/courses/view?pageNumber=${pageNumber}`)
       .then((result) => {
         if (result.data.status == true) {
+          settot(result.data.tot) //pagenation total
+          console.log("pagi", result.data.data) //pagenation total
+
           setImagePath(result.data.imagePath)
 
           setCourses(result.data.data)
+          console.log(result.data)
         } else {
           setCourses([])
         }
       })
       .catch((error) => {})
-  }, [changeStatusValue])
+  }, [changeStatusValue,pageNumber])
+  // pagination logic start
+  let ChangePageNumber = (para) => {
+    let pNumber
+    if (para == 1) {
+      pNumber = 1
+    }
+    if (para == "Previous") {
+      pNumber = pageNumber - 1
+    }
+    if (para == "Next") {
+      pNumber = pageNumber + 1
+    }
+    if (para == "Last") {
+      pNumber = Math.ceil(tot / 5)
+    }
+    setpageNumber(pNumber)
+  }
   return (
     <div>
       <Header />
@@ -157,7 +185,6 @@ function Viewcourse() {
 
                 {courses.length > 0 ? (
                   courses.map((v, i) => {
-                   
                     return (
                       <tr key={i}>
                         <td>
@@ -166,7 +193,7 @@ function Viewcourse() {
                             onClick={() => multipleSelect(v._id)}
                           />
                         </td>
-                        <td>{i + 1}</td>
+                        <td>{(pageNumber - 1) * limit + i + 1}</td>
                         <td>{v.name}</td>
                         <td>{v.price}</td>
                         <td>{v.duration}</td>
@@ -226,8 +253,38 @@ function Viewcourse() {
                   </tr>
                 )}
               </table>
+              <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                <div className="flex flex-1 justify-center ">
+                  <button
+                    onClick={() => ChangePageNumber(1)}
+                    href="#"
+                    className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    1
+                  </button>
+                  <button
+                    onClick={() => ChangePageNumber("Previous")}
+                    className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => ChangePageNumber("Next")}
+                    className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Next
+                  </button>
+                  <button
+                    onClick={() => ChangePageNumber("Last")}
+                    className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    last
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+
           <Footer />
         </div>
       </div>
