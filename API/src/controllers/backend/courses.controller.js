@@ -104,7 +104,7 @@ exports.view = async (request, response) => {
         }
 
         response.send(res)
-        console.log(result)
+        console.log('result')
       } else {
         var res = {
           status: false,

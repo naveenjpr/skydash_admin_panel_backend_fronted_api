@@ -116,7 +116,7 @@ function Viewcourse() {
 
   useEffect(() => {
     axios
-      .post(`http://localhost:5000/api/backend/courses/view/?pageNumber=${pageNumber}`)
+      .post(`http://localhost:5000/api/backend/courses/view/?pageNumber=${2}`)
       .then((result) => {
         if (result.data.status == true) {
           settot(result.data.tot) //pagenation total
