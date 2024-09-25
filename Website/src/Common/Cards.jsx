@@ -7,17 +7,20 @@ import axios from "axios"
 import { Cookies } from "react-cookie"
 
 function Cards() {
-  let [tokenvalue, settokenvalue] = useState([] )
+  let [tokenvalue, settokenvalue] = useState([]);
+  const [courses, setCourses] = useState([]);
   console.log(tokenvalue)
   let cookies = new Cookies()
 
   useEffect(() => {
     // var token = cookies.get("token")
-    let token = localStorage.getItem("token")
+    let token = localStorage.getItem("token");
+
+    console.log(token);
 
     axios
       .post(
-        "http://localhost:5000/api/fronted/courses/view" + token
+        "http://localhost:5000/api/fronted/courses/view"
 
         // {
         //   headers: {

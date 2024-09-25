@@ -25,12 +25,12 @@ function Home() {
   
   return (
     <>
-    <Header/>
-    <section className='w-full'>
+    {/* <Header/> */}
+    {/* <section className='w-full'>
     <div className='w-full h-[30vh] lg:h-[100vh]'>
     <HomeSlider />
     </div>
-    </section>
+    </section> */}
     <section className='w-full pt-[20px] px-[20px] lg:px-0 lg:pt-[100px] '>
     <div className='max-w-[1300px] m-auto text-center font-["Nunito"]'>
     <h1 className='lg:text-[30px] text-[25px] font-[600] text-[#203367] pb-2'>Via School Categories Courses</h1>
@@ -51,7 +51,7 @@ function Home() {
     <p className='text-[18px]'>Cum doctus civibus efficiantur in imperdiet deterruisset.</p>
     <div className='grid lg:grid-cols-4 py-[30px] gap-8 mt-8 mb-[50px]'>
     
-    <CardsTwo/>
+    {/* <CardsTwo/> */}
     
     </div>
     </div>

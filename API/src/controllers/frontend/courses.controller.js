@@ -5,51 +5,51 @@ var secretKey = "123456789"
 exports.view = async (request, response) => {
   console.log("first")
   
-  console.log(request.headers.authorization.split(" ")[1])
+  // console.log(request.headers.authorization.split(" ")[1])
 
   // if (!request.headers.authorization)
   // return response.status(401).json({ message: "please provoide a token" })
 
-  if (request.headers.authorization.split(" ")[1] == undefined) {
-    var res = {
-      status: false,
-      token_error: true,
+  // if (request.headers.authorization.split(" ")[1] == undefined) {
+  //   var res = {
+  //     status: false,
+  //     token_error: true,
 
-      message: "token required",
-    }
-    response.send(res)
-  }
+  //     message: "token required",
+  //   }
+  //   response.send(res)
+  // }
 
-  if (request.headers.authorization.split(" ")[1] == "") {
-    var res = {
-      status: false,
-      token_error: true,
+  // if (request.headers.authorization.split(" ")[1] == "") {
+  //   var res = {
+  //     status: false,
+  //     token_error: true,
 
-      message: "Invalid token required",
-    }
+  //     message: "Invalid token required",
+  //   }
 
-    response.send(res)
-  }
+  //   response.send(res)
+  // }
 
   // verify a token symmetric
-  jwt.verify(
-    request.headers.authorization.split(" ")[1],
-    secretKey,
-    function (error, result) {
-      if (error) {
-        var res = {
-          status: false,
-          message: "Incorrect token",
-        }
+  // jwt.verify(
+  //   request.headers.authorization.split(" ")[1],
+  //   secretKey,
+  //   function (error, result) {
+  //     if (error) {
+  //       var res = {
+  //         status: false,
+  //         message: "Incorrect token",
+  //       }
 
-        response.send(res)
-      } else {
-        var userDetails = result
-        console.log(userDetails)
-      }
-      // console.log(decoded.foo) // bar
-    }
-  )
+  //       response.send(res)
+  //     } else {
+  //       var userDetails = result
+  //       console.log(userDetails)
+  //     }
+  //     // console.log(decoded.foo) // bar
+  //   }
+  // )
 
   var condition = {
     deleted_at: null,

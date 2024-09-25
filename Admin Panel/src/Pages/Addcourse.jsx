@@ -125,11 +125,11 @@ function Addcourse() {
         })
     }
   }
-  useEffect(() => {
-    if (formSubmit == true) {
-      navigation("/viewcourse")
-    }
-  }, [formSubmit])
+  // useEffect(() => {
+  //   if (formSubmit == true) {
+  //     navigation("/viewcourse")
+  //   }
+  // }, [formSubmit])
   let inputHander = (event) => {
     let data = { ...input }
     data[event.target.name] = event.target.value
